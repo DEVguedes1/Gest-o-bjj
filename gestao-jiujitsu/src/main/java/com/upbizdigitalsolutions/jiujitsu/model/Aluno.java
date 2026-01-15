@@ -1,0 +1,32 @@
+package com.upbizdigitalsolutions.jiujitsu.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "alunos")
+@Data
+public class Aluno {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String nome;
+
+    @Column(unique = true, nullable = false)
+    private String cpf;
+
+    private String email;
+
+    private String faixa;
+
+    private LocalDate dataInscricao = LocalDate.now();
+
+    @ManyToOne
+    @JoinColumn(name = "plano_id")
+    private Plano plano;
+}

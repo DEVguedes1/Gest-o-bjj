@@ -1,0 +1,90 @@
+/* src/PlanoCard.css */
+.card {
+  background: var(--bg-white);
+  border-radius: 12px; /* Bordas um pouco menos arredondadas */
+  padding: 24px; /* Reduzido o espaçamento interno */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  width: 100%;
+  max-width: 320px; /* Largura máxima reduzida de 380px para 320px */
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Movimento mais sutil */
+  border-color: rgba(211, 47, 47, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.card h3 {
+  margin-top: 0;
+  font-size: 1.25rem; /* Fonte do título reduzida */
+  font-weight: 800;
+  color: var(--primary-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.preco {
+  font-size: 2.5rem; /* Fonte do preço reduzida de 3rem para 2.5rem */
+  font-weight: 900;
+  color: var(--primary-red);
+  margin: 16px 0; /* Margem reduzida */
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.preco span {
+    font-size: 0.875rem; /* Fonte do "/mês" reduzida */
+    font-weight: 600;
+    color: var(--accent-gray);
+    margin-left: 6px;
+}
+
+.detalhes {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0; /* Margem inferior reduzida */
+  flex-grow: 1;
+}
+
+.detalhes li {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espaço entre ícone e texto reduzido */
+  margin-bottom: 12px; /* Espaço entre itens reduzido */
+  font-size: 1rem; /* Fonte dos detalhes reduzida para o padrão */
+  font-weight: 500;
+  color: var(--primary-dark);
+}
+
+/* Ajuste fino para os ícones ficarem proporcionais */
+.detalhes li svg {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-selecionar {
+  width: 100%;
+  padding: 14px; /* Botão ligeiramente mais baixo */
+  background: var(--primary-red);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem; /* Fonte do botão reduzida */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s;
+}
+
+.btn-selecionar:hover {
+  background: #B71C1C;
+}
