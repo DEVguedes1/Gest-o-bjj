@@ -7,6 +7,7 @@ export default function AlunoForm({ onAlunoCadastrado }) {
     nome: '',
     cpf: '',
     email: '',
+    telefone: '',
     faixa: 'Branca'
   });
 
@@ -34,6 +35,13 @@ export default function AlunoForm({ onAlunoCadastrado }) {
         <input name="cpf" value={aluno.cpf} onChange={handleChange} placeholder="CPF (apenas números)" required />
       </div>
       <div className="input-group">
+        <input 
+          name="telefone" 
+          value={aluno.telefone} 
+          onChange={handleChange} 
+          placeholder="WhatsApp (Ex: 83999998888)" 
+          required 
+        />
         <input name="email" value={aluno.email} onChange={handleChange} placeholder="E-mail" required />
         <select name="faixa" value={aluno.faixa} onChange={handleChange}>
           <option value="Branca">Faixa Branca</option>

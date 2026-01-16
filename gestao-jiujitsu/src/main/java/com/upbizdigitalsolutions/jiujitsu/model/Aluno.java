@@ -22,6 +22,10 @@ public class Aluno {
 
     private String email;
 
+    private String telefone;
+
+    private Integer diaVencimento;
+
     private String faixa;
 
     private LocalDate dataInscricao = LocalDate.now();

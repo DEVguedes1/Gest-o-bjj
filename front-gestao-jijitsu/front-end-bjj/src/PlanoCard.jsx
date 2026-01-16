@@ -17,7 +17,7 @@ export default function PlanoCard({ plano }) {
       <h3>{plano.nome || "PLANO BJJ"}</h3>
       
       <div className="preco">
-        R$ {formatarPreco(plano.preco)}
+        R$ {plano && plano.preco ? Number(plano.preco).toFixed(2).replace('.', ',') : "0,00"}
         <span>/mês</span>
       </div>
 
