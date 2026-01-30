@@ -33,4 +33,5 @@ public class Aluno {
     @ManyToOne
     @JoinColumn(name = "plano_id")
     private Plano plano;
+
 }

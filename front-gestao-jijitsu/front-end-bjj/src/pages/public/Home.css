@@ -1,0 +1,232 @@
+/* Variáveis e Reset */
+:root {
+  --bjj-red: #E20613;
+  --bjj-dark: #0A0A0A;
+  --white: #ffffff;
+  --gray-light: #f8f8f8;
+  --text-dark: #1a1a1a;
+  --transition: all 0.3s ease;
+}
+
+.home-wrapper {
+  overflow-x: hidden;
+  color: var(--text-dark);
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-padding { padding: 80px 0; }
+.bg-white { background-color: var(--white); }
+.bg-dark { background-color: var(--bjj-dark); }
+.bg-red { background-color: var(--bjj-red); }
+.bg-gray-light { background-color: var(--gray-light); }
+.text-white { color: var(--white); }
+.text-center { text-align: center; }
+
+/* Hero Section */
+.hero {
+  position: relative;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  background-color: var(--bjj-dark);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+  filter: grayscale(100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+}
+
+.subtitle {
+  color: var(--bjj-red);
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.main-title {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.highlight { color: var(--bjj-red); }
+
+.description {
+  max-width: 600px;
+  font-size: 1.2rem;
+  color: #ccc;
+  margin: 30px 0;
+}
+
+/* Botões */
+.btn-primary {
+  background-color: var(--bjj-red);
+  color: var(--white);
+  padding: 20px 40px;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+  transition: var(--transition);
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(226, 6, 19, 0.4);
+}
+
+.btn-primary:hover {
+  background-color: var(--white);
+  color: var(--bjj-dark);
+}
+
+.btn-white {
+  background-color: var(--white);
+  color: var(--bjj-dark);
+  padding: 20px 40px;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+/* Grid de Conteúdo */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.image-frame img {
+  width: 100%;
+  box-shadow: 20px 20px 0 var(--bjj-red);
+}
+
+.section-title {
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.feature-list {
+  list-style: none;
+  margin-top: 20px;
+}
+
+.feature-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.icon-red { color: var(--bjj-red); }
+
+/* Grade de Horários */
+.schedule-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.schedule-column {
+  background: var(--white);
+  padding: 40px;
+  border-left: 6px solid var(--bjj-red);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.schedule-column h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.schedule-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.time { font-weight: 900; font-size: 1.1rem; }
+.class { color: #666; font-weight: 600; }
+
+/* Instructor Card */
+.instructor-card {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.instructor-img-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.instructor-img-wrapper img {
+  width: 100%;
+  filter: grayscale(1);
+}
+
+.rank-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: var(--bjj-red);
+  color: var(--white);
+  padding: 10px 20px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.rank-text {
+  color: var(--bjj-red);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.big-cta-title {
+  font-size: 4rem;
+  font-weight: 900;
+  font-style: italic;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .grid-2, .schedule-container { grid-template-columns: 1fr; }
+  .main-title { font-size: 3.5rem; }
+  .big-cta-title { font-size: 2.5rem; }
+}
