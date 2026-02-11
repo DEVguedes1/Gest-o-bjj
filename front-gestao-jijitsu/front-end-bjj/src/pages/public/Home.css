@@ -83,17 +83,48 @@
 }
 
 /* Botões */
-.btn-primary {
-  background-color: var(--bjj-red);
-  color: var(--white);
-  padding: 20px 40px;
-  font-weight: 900;
+/* Estilo Base (já deve existir algo similar) */
+.btn-primary, .btn-submit {
+  background-color: #E20613;
+  color: #fff;
+  padding: 15px 30px;
+  border-radius: 4px;
+  font-weight: 800;
   text-transform: uppercase;
   text-decoration: none;
-  display: inline-block;
-  transition: var(--transition);
-  letter-spacing: 1px;
-  box-shadow: 0 4px 15px rgba(226, 6, 19, 0.4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #E20613;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Versão Outline (Igual em tamanho, mas vazada) */
+.btn-outline {
+  background-color: transparent !important;
+  color: #E20613 !important;
+}
+
+.btn-outline:hover {
+  background-color: #E20613 !important;
+  color: #fff !important;
+}
+
+/* Espaçamento na Matrícula */
+.login-prompt {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+}
+
+.login-prompt span {
+  color: #888;
+  font-size: 0.9rem;
 }
 
 .btn-primary:hover {

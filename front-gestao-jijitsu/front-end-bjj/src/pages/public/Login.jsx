@@ -1,45 +1,79 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
+import { LogIn, User, Lock, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
 const Login = () => {
+  const [credentials, setCredentials] = useState({ login: '', senha: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8080/api/auth/login', credentials);
+      const user = response.data;
+
+      // Salva as infos básicas para usar no Dashboard/Perfil
+      localStorage.setItem('user_role', user.role);
+      localStorage.setItem('user_nome', user.nome);
+
+      if (user.role === 'ADMIN') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/aluno/perfil');
+      }
+  } catch (err) {
+    alert("Usuário ou senha incorretos");
+  }
+};
+
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
-      {/* Box Principal */}
-      <div className="w-full max-w-[350px] bg-black border border-gray-800 p-8 flex flex-col items-center mb-4">
-        <h1 className="text-4xl font-black italic mb-10 text-white tracking-tighter">
-          BRUNO CAETANO <span className="text-red-600">BJJ</span>
-        </h1>
-        
-        <form className="w-full space-y-2">
-          <input 
-            type="text" 
-            placeholder="Telefone, nome de usuário ou email" 
-            className="w-full bg-gray-900 border border-gray-800 rounded-sm p-3 text-xs text-white focus:outline-none focus:border-gray-600"
-          />
-          <input 
-            type="password" 
-            placeholder="Senha" 
-            className="w-full bg-gray-900 border border-gray-800 rounded-sm p-3 text-xs text-white focus:outline-none focus:border-gray-600"
-          />
-          <button className="w-full bg-red-600 text-white font-bold py-2 rounded-md mt-4 text-sm hover:bg-red-700 transition">
-            Entrar
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-header">
+          <div className="logo-placeholder">BC</div>
+          <h1>Acesso Restrito</h1>
+          <p>Gestão de Treinos Bruno Caetano BJJ</p>
+        </div>
+
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="input-group">
+            <label><User size={18} /> Usuário</label>
+            <input 
+              type="text" 
+              placeholder="Digite seu login"
+              required
+              onChange={(e) => setCredentials({...credentials, login: e.target.value})}
+            />
+          </div>
+
+          <div className="input-group">
+            <label><Lock size={18} /> Senha</label>
+            <input 
+              type="password" 
+              placeholder="••••••••"
+              required
+              onChange={(e) => setCredentials({...credentials, senha: e.target.value})}
+            />
+          </div>
+
+          {error && (
+            <div className="login-error">
+              <AlertCircle size={16} /> {error}
+            </div>
+          )}
+
+          <button type="submit" className="btn-login" disabled={loading}>
+            {loading ? 'Autenticando...' : <><LogIn size={20} /> Entrar</>}
           </button>
         </form>
 
-        <div className="flex items-center w-full my-6">
-          <div className="flex-grow border-t border-gray-800"></div>
-          <span className="px-4 text-gray-500 text-xs font-bold uppercase tracking-widest">OU</span>
-          <div className="flex-grow border-t border-gray-800"></div>
+        <div className="login-footer">
+          <p>Esqueceu a senha? Entre em contato com o suporte.</p>
         </div>
-
-        <button className="text-white text-sm font-bold">Entrar com o Facebook</button>
-        <p className="text-xs text-gray-400 mt-4 cursor-pointer">Esqueceu a senha?</p>
-      </div>
-
-      {/* Box Inferior (Cadastro) */}
-      <div className="w-full max-w-[350px] bg-black border border-gray-800 p-6 text-center">
-        <p className="text-sm text-white">
-          Não tem uma conta? <Link to="/matricula" className="text-red-600 font-bold ml-1">Cadastre-se</Link>
-        </p>
       </div>
     </div>
   );

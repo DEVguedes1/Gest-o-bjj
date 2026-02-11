@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { User, Mail, Phone, MapPin, Award, CheckCircle2 } from 'lucide-react';
+// ADICIONADO 'Link' na importação abaixo
+import { Link } from 'react-router-dom'; 
+import { User, Mail, Phone, Award, CheckCircle2, Lock } from 'lucide-react'; 
 import './Matricula.css';
 
 const Matricula = () => {
@@ -9,13 +11,14 @@ const Matricula = () => {
     nome: '',
     email: '',
     telefone: '',
-    endereco: '',
+    cpf: '',
+    dataNascimento: '',
+    senha: '', 
     planoId: ''
   });
   const [status, setStatus] = useState({ type: '', message: '' });
 
   useEffect(() => {
-    // Carrega os planos configurados no seu PlanoController
     axios.get('http://localhost:8080/api/planos')
       .then(res => setPlanos(res.data))
       .catch(err => console.error("Erro ao carregar planos:", err));
@@ -24,7 +27,6 @@ const Matricula = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Envia os dados para o seu MatriculaController
       await axios.post('http://localhost:8080/api/matriculas', formData);
       setStatus({ type: 'success', message: 'Inscrição realizada com sucesso! Bem-vindo à equipa.' });
     } catch (err) {
@@ -36,10 +38,9 @@ const Matricula = () => {
     <div className="matricula-page">
       <div className="container grid-matricula">
         
-        {/* Lado Esquerdo: Benefícios e Confiança */}
         <div className="matricula-info">
           <span className="badge">Matrícula Online</span>
-          <h1 className="title">Junte-se à <br /><span className="highlight">escola de Luta Bruno Caetano</span></h1>
+          <h1 className="title">Junte-se à <br /><span className="highlight">Escola de Jiu-Jitsu Bruno Caetano</span></h1>
           <p className="subtitle">Preencha os dados abaixo para iniciar a sua jornada no Jiu-Jitsu oficial.</p>
           
           <div className="benefits-list">
@@ -60,7 +61,6 @@ const Matricula = () => {
           </div>
         </div>
 
-        {/* Lado Direito: Formulário Limpo */}
         <div className="matricula-card">
           <form onSubmit={handleSubmit} className="form-matricula">
             <div className="input-group">
@@ -93,7 +93,7 @@ const Matricula = () => {
                 />
               </div>
             </div>
-            {/* Novo campo de CPF e Data de Nascimento (para validar Kids) */}
+
             <div className="grid-inputs">
               <div className="input-group">
                 <label>CPF</label>
@@ -113,6 +113,17 @@ const Matricula = () => {
                 />
               </div>
             </div>
+
+            <div className="input-group">
+              <label><Lock size={18} /> Crie uma Senha para Acesso</label>
+              <input 
+                type="password" 
+                placeholder="Mínimo 6 caracteres"
+                required 
+                onChange={(e) => setFormData({...formData, senha: e.target.value})}
+              />
+            </div>
+
             <div className="input-group">
               <label><Award size={18} /> Selecione o seu Plano</label>
               <select 
@@ -127,6 +138,11 @@ const Matricula = () => {
             </div>
 
             <button type="submit" className="btn-submit">Finalizar Inscrição</button>
+            
+            <div className="login-prompt">
+              <span>Já possui uma conta?</span>
+              <Link to="/login" className="btn-submit btn-outline">Fazer Login</Link>
+            </div>         
 
             {status.message && (
               <div className={`alert ${status.type}`}>
@@ -135,7 +151,6 @@ const Matricula = () => {
             )}
           </form>
         </div>
-
       </div>
     </div>
   );
