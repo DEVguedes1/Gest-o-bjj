@@ -11,22 +11,30 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', credentials);
-      const user = response.data;
+  e.preventDefault();
+  setLoading(true);
+  setError('');
 
-      // Salva as infos básicas para usar no Dashboard/Perfil
-      localStorage.setItem('user_role', user.role);
-      localStorage.setItem('user_nome', user.nome);
+  try {
+    const response = await axios.post('http://localhost:8080/api/auth/login', credentials);
+    const user = response.data;
 
-      if (user.role === 'ADMIN') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/aluno/perfil');
-      }
+    // É fundamental salvar exatamente o que o ProtectedRoute espera
+    localStorage.setItem('user_role', user.role);
+    localStorage.setItem('user_nome', user.nome);
+    localStorage.setItem('is_auth', 'true'); // Flag extra para segurança
+
+    // Redirecionamento imediato após salvar
+    if (user.role === 'ADMIN') {
+      navigate('/admin/dashboard');
+    } else {
+      navigate('/aluno/perfil');
+    }
   } catch (err) {
-    alert("Usuário ou senha incorretos");
+    console.error(err);
+    alert("Erro ao realizar login. Verifique suas credenciais.");
+  } finally {
+    setLoading(false);
   }
 };
 

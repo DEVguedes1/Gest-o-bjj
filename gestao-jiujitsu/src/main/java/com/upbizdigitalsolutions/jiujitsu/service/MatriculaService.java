@@ -1,11 +1,8 @@
 package com.upbizdigitalsolutions.jiujitsu.service;
 
-import com.upbizdigitalsolutions.jiujitsu.model.Aluno;
-import com.upbizdigitalsolutions.jiujitsu.model.Matricula;
-import com.upbizdigitalsolutions.jiujitsu.model.Plano;
-import com.upbizdigitalsolutions.jiujitsu.repository.AlunoRepository;
-import com.upbizdigitalsolutions.jiujitsu.repository.MatriculaRepository;
-import com.upbizdigitalsolutions.jiujitsu.repository.PlanoRepository;
+import com.upbizdigitalsolutions.jiujitsu.model.*;
+import com.upbizdigitalsolutions.jiujitsu.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,26 +19,36 @@ public class MatriculaService {
 
     @Autowired
     private PlanoRepository planoRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-    // Arquivo: service/MatriculaService.java
-    public Matricula realizarMatricula(Long alunoId, Long planoId) {
-        if (alunoId == null || planoId == null) {
-            throw new RuntimeException("IDs de aluno ou plano não podem ser nulos");
-        }
+    @Autowired
+    private MensalidadeRepository mensalidadeRepository;
 
-        Aluno aluno = alunoRepository.findById(alunoId)
-                .orElseThrow(() -> new RuntimeException("Aluno ID " + alunoId + " não encontrado"));
+    @Transactional
+    public Matricula realizarMatricula(Matricula matricula) {
+        // 1. Salva a Matrícula e o Aluno vinculado
+        // A matrícula já traz o Plano selecionado do Frontend
+        Matricula novaMatricula = matriculaRepository.save(matricula);
+        Aluno aluno = novaMatricula.getAluno();
 
-        Plano plano = planoRepository.findById(planoId)
-                .orElseThrow(() -> new RuntimeException("Plano ID " + planoId + " não encontrado"));
+        // 2. CRIAÇÃO DO USUÁRIO (Login)
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setNome(aluno.getNome());
+        novoUsuario.setLogin(aluno.getEmail());
+        novoUsuario.setEmail(aluno.getEmail());
+        novoUsuario.setSenha("123456"); // Senha padrão
+        usuarioRepository.save(novoUsuario);
 
-        Matricula nova = new Matricula();
-        nova.setAluno(aluno);
-        nova.setPlano(plano);
-        nova.setDataInicio(LocalDate.now());
-        nova.setDataFim(LocalDate.now().plusMonths(plano.getDuracaoMeses()));
-        nova.setStatus("ATIVA");
+        // 3. GERAÇÃO DA PRIMEIRA MENSALIDADE
+        // Baseado no valor do Plano escolhido na matrícula
+        Mensalidade primeiraMensalidade = new Mensalidade();
+        primeiraMensalidade.setAluno(aluno);
+        primeiraMensalidade.setValor(novaMatricula.getPlano().getPreco());
+        primeiraMensalidade.setDataVencimento(novaMatricula.getDataMatricula().plusMonths(1));
+        primeiraMensalidade.setStatus("PENDENTE");
+        mensalidadeRepository.save(primeiraMensalidade);
 
-        return matriculaRepository.save(nova);
+        return novaMatricula;
     }
 }

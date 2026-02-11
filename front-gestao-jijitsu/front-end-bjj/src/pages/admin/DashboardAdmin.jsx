@@ -1,40 +1,99 @@
-import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Receipt, LogOut } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { 
+  Users, DollarSign, Calendar, TrendingUp, 
+  Settings, LogOut, LayoutDashboard, UserPlus 
+} from 'lucide-react';
+import './DashboardAdmin.css';
 
 const DashboardAdmin = () => {
-  const navigate = useNavigate();
+  const [adminNome, setAdminNome] = useState('');
+  const [stats, setStats] = useState({ totalAlunos: 0, ativos: 0, faturamentoTotal: 0 });
+
+  useEffect(() => {
+    const nome = localStorage.getItem('user_nome');
+    if (nome) setAdminNome(nome);
+    
+    // Chama a função para buscar dados reais
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/dashboard/stats');
+      setStats(response.data);
+    } catch (error) {
+      console.error("Erro ao carregar dados reais:", error);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/login';
+  };
 
   return (
-    <div className="flex min-h-screen bg-gray-950 text-white">
-      {/* Sidebar Lateral */}
-      <aside className="w-64 bg-gray-900 border-r border-gray-800 p-6 flex flex-col">
-        <div className="mb-10 text-xl font-black tracking-tighter uppercase">
-          BC <span className="text-red-600">Admin</span>
-        </div>
-
-        <nav className="flex-grow space-y-2">
-          <Link to="/admin/financeiro" className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition text-gray-400 hover:text-white">
-            <Receipt size={20} /> Financeiro
-          </Link>
-          <Link to="/admin/alunos" className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition text-gray-400 hover:text-white">
-            <Users size={20} /> Alunos
-          </Link>
-          <Link to="/admin" className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition text-gray-400 hover:text-white">
-            <LayoutDashboard size={20} /> Resumo
-          </Link>
+    <div className="admin-dashboard">
+      <aside className="sidebar">
+        <h2>BJJ ADMIN</h2>
+        <nav className="sidebar-menu">
+          <div className="menu-item"><LayoutDashboard size={20} /> <span>Dashboard</span></div>
+          <div className="menu-item"><Users size={20} /> <span>Alunos</span></div>
+          <div className="menu-item"><UserPlus size={20} /> <span>Novas Matrículas</span></div>
+          <div className="menu-item"><DollarSign size={20} /> <span>Financeiro</span></div>
+          <div className="menu-item"><Settings size={20} /> <span>Configurações</span></div>
+          <div className="menu-item" onClick={handleLogout} style={{marginTop: 'auto', color: '#ff4d4d'}}>
+            <LogOut size={20} /> <span>Sair</span>
+          </div>
         </nav>
-
-        <button 
-          onClick={() => navigate('/')}
-          className="mt-auto flex items-center gap-3 p-3 text-red-500 hover:bg-red-500/10 rounded-xl transition font-bold"
-        >
-          <LogOut size={20} /> Sair
-        </button>
       </aside>
 
-      {/* Área de Conteúdo Dinâmico */}
-      <main className="flex-grow p-10">
-        <Outlet /> 
+      <main className="main-content">
+        <header style={{marginBottom: '30px'}}>
+          <h1 style={{fontSize: '1.8rem'}}>Olá, Mestre {adminNome}</h1>
+          <p style={{color: '#666'}}>Resumo extraído diretamente do banco de dados.</p>
+        </header>
+
+        <div className="header-stats">
+          <div className="stat-card">
+            <div className="icon-box"><Users size={28} /></div>
+            <div className="stat-info">
+              <h3>Total Alunos</h3>
+              <p>{stats.totalAlunos}</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="icon-box"><TrendingUp size={28} /></div>
+            <div className="stat-info">
+              <h3>Ativos</h3>
+              <p>{stats.ativos}</p>
+            </div>
+          </div>
+
+          <div className="stat-card" style={{borderBottomColor: '#28a745'}}>
+            <div className="icon-box" style={{background: '#e6ffec', color: '#28a745'}}><DollarSign size={28} /></div>
+            <div className="stat-info">
+              <h3>Faturamento</h3>
+              <p>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.faturamentoTotal)}</p>
+            </div>
+          </div>
+
+          <div className="stat-card" style={{borderBottomColor: '#ffc107'}}>
+            <div className="icon-box" style={{background: '#fff9e6', color: '#ffc107'}}><Calendar size={28} /></div>
+            <div className="stat-info">
+              <h3>Aulas Hoje</h3>
+              <p>6</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="recent-activity">
+          <h2 style={{marginBottom: '20px', fontSize: '1.2rem'}}>Matrículas Recentes</h2>
+          <div style={{color: '#666', textAlign: 'center', padding: '40px'}}>
+            <p>Os dados acima agora são atualizados em tempo real via MySQL.</p>
+          </div>
+        </div>
       </main>
     </div>
   );

@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+/* Container Principal */
+.admin-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f7f6;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar Responsiva */
+.sidebar {
+  width: 260px;
+  background-color: #1a1a1a;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s;
+}
+
+.sidebar h2 {
+  color: #d4af37;
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  transition: background 0.2s;
+}
+
+.menu-item:hover {
+  background-color: #333;
+}
+
+/* Conteúdo Principal */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.header-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+/* Cards de Métricas */
+.stat-card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 4px solid #d4af37;
+}
+
+.icon-box {
+  background: #fff9e6;
+  padding: 15px;
+  border-radius: 12px;
+  color: #d4af37;
+}
+
+.stat-info h3 {
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0;
+}
+
+.stat-info p {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 5px 0 0;
+  color: #1a1a1a;
+}
+
+/* Tabela de Atividades Recentes */
+.recent-activity {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* --- RESPONSIVIDADE (Celular) --- */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .sidebar h2 { margin-bottom: 10px; }
+
+  .sidebar-menu {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+  }
+
+  .menu-item span { display: none; } /* Esconde texto no mobile, deixa só ícone */
+
+  .main-content {
+    padding: 15px;
+  }
+}

@@ -18,4 +18,7 @@ public class Usuario {
     private String senha;
 
     private String nome;
+
+    @Column(unique = true)
+    private String email;
 }

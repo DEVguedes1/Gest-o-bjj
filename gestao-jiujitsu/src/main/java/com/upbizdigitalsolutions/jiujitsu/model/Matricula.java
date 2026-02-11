@@ -24,4 +24,8 @@ public class Matricula {
     private LocalDate dataInicio = LocalDate.now();
     private LocalDate dataFim;
     private String status = "ATIVA";
+
+    public LocalDate getDataMatricula() {
+        return dataInicio;
+    }
 }

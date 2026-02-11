@@ -1,40 +1,56 @@
-// front-gestao-jijitsu/front-end-bjj/src/routes/AppRoutes.jsx
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../pages/public/Home';
 import Matricula from '../pages/public/Matricula';
 import Login from '../pages/public/Login';
 import DashboardAdmin from '../pages/admin/DashboardAdmin';
-import PerfilAluno from '../pages/aluno/PerfilAluno'; // Você precisará criar este componente
+import PerfilAluno from '../pages/student/PerfilAluno';
 
-const ProtectedAdminRoute = ({ children }) => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (!user || user.role !== 'ADMIN') {
-    return <Navigate to="/login" />;
+// Componente de Proteção de Rota
+const ProtectedRoute = ({ children, allowedRole }) => {
+  const role = localStorage.getItem('user_role');
+  const isAuth = localStorage.getItem('is_auth') === 'true';
+
+  if (!isAuth) {
+    return <Navigate to="/login" replace />;
   }
+
+  if (allowedRole && role !== allowedRole) {
+    return <Navigate to="/login" replace />;
+  }
+
   return children;
 };
-
 
 const AppRoutes = () => {
   return (
     <Router>
       <Routes>
+        {/* Rotas Públicas */}
         <Route path="/" element={<Home />} />
         <Route path="/matricula" element={<Matricula />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin/dashboard" element={<DashboardAdmin />} />
-        
-        {/* Nova Rota para o Painel do Aluno */}
-        <Route path="/aluno/perfil" element={<PerfilAluno />} />
+
+        {/* Rotas Privadas - O segredo está aqui */}
         <Route 
           path="/admin/dashboard" 
           element={
-            <ProtectedAdminRoute>
+            <ProtectedRoute allowedRole="ADMIN">
               <DashboardAdmin />
-            </ProtectedAdminRoute>
+            </ProtectedRoute>
           } 
         />
+        
+        <Route 
+          path="/aluno/perfil" 
+          element={
+            <ProtectedRoute allowedRole="ALUNO">
+              <PerfilAluno />
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* Rota de "Escape": Se digitar qualquer coisa errada, volta pro login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

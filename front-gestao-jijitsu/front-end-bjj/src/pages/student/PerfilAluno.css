@@ -1,0 +1,75 @@
+/* Container Geral */
+.perfil-aluno-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+/* Cabeçalho (Hero) */
+.perfil-hero {
+    background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.perfil-hero h1 { 
+    margin: 10px 0; 
+    font-size: 2rem; 
+}
+
+/* Grid de Cards de Informação */
+.info-cards-aluno {
+    display: flex;
+    flex-direction: row; /* Lado a lado em telas grandes */
+    gap: 15px;
+    margin-top: -25px;
+    padding: 0 10px;
+}
+
+.card-atleta {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-top: 4px solid #d4af37;
+}
+
+.card-atleta h4 { 
+    color: #888; 
+    margin-bottom: 5px; 
+    font-size: 0.9rem;
+}
+
+.card-atleta p { 
+    font-weight: bold; 
+    font-size: 1.1rem; 
+    margin: 0;
+}
+
+/* --- MEDIA QUERIES (Responsividade) --- */
+
+@media (max-width: 768px) {
+    .info-cards-aluno {
+        flex-direction: column; /* Um embaixo do outro no celular */
+        margin-top: 20px; /* Remove o efeito de sobreposição no mobile */
+        padding: 0;
+    }
+
+    .perfil-hero {
+        padding: 20px;
+    }
+
+    .perfil-hero h1 {
+        font-size: 1.6rem;
+    }
+
+    .card-atleta {
+        width: 100%; /* Ocupa a largura toda */
+    }
+}

@@ -24,4 +24,7 @@ public interface MensalidadeRepository extends JpaRepository<Mensalidade, Long> 
             @Param("mes") int mes,
             @Param("ano") int ano
     );
+
+    @Query("SELECT SUM(m.valor) FROM Mensalidade m WHERE m.status = 'PAGO'")
+    Double sumAllPaidMensalidades();
 }

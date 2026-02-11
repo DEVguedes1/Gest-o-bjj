@@ -1,21 +1,12 @@
-import { Routes, Route } from 'react-router-dom';
-import Home from './pages/public/Home';
-import Login from './pages/public/Login';
-import Matricula from './pages/public/Matricula';
-import DashboardAdmin from './pages/admin/DashboardAdmin';
-import Financeiro from './pages/admin/Financeiro';
+// src/App.jsx
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/matricula" element={<Matricula />} />
-      
-      <Route path="/admin" element={<DashboardAdmin />}>
-        <Route path="financeiro" element={<Financeiro />} />
-      </Route>
-    </Routes>
+    <div className="App">
+      <AppRoutes />
+    </div>
   );
 }
+
 export default App;
