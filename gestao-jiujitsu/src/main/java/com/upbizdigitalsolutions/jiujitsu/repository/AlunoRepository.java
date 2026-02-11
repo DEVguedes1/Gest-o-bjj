@@ -2,11 +2,9 @@ package com.upbizdigitalsolutions.jiujitsu.repository;
 
 import com.upbizdigitalsolutions.jiujitsu.model.Aluno;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
-import java.util.List;
-
-@Repository
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
-    List<Aluno> findByDiaVencimento(int dia);
+    Optional<Aluno> findByEmail(String email);
+    Optional<Aluno> findByCpf(String cpf);
 }

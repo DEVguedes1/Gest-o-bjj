@@ -22,22 +22,38 @@ public class MatriculaController {
 
     @PostMapping
     public Matricula criar(@RequestBody Map<String, Object> payload) {
-        // 1. Criar o Aluno com os dados do formulário
-        Aluno aluno = new Aluno();
-        aluno.setNome((String) payload.get("nome"));
-        aluno.setEmail((String) payload.get("email"));
-        aluno.setTelefone((String) payload.get("telefone"));
-        aluno.setCpf((String) payload.get("cpf"));
-        aluno.setFaixa("Branca"); // Padrão inicial
+        try {
+            // 1. Criar o Aluno com validação de tipos
+            Aluno aluno = new Aluno();
+            aluno.setNome((String) payload.get("nome"));
+            aluno.setEmail((String) payload.get("email"));
+            aluno.setTelefone((String) payload.get("telefone"));
+            aluno.setCpf((String) payload.get("cpf"));
+            aluno.setSenha((String) payload.get("senha")); // Captura a senha do payload
+            aluno.setFaixa("Branca");
 
-        // Salva o aluno para gerar o ID (Necessário para a matrícula)
-        alunoRepository.save(aluno);
+            // Garante que o CPF não é nulo antes de salvar
+            if (aluno.getCpf() == null || aluno.getCpf().isEmpty()) {
+                throw new RuntimeException("CPF é obrigatório");
+            }
 
-        // 2. Extrair o ID do plano (convertendo de Object para Long)
-        Long planoId = Long.valueOf(payload.get("planoId").toString());
+            alunoRepository.save(aluno);
 
-        // 3. Finalizar a matrícula usando o seu serviço atual
-        return matriculaService.realizarMatricula(aluno.getId(), planoId);
+            // 2. Conversão segura do planoId
+            Object planoIdObj = payload.get("planoId");
+            if (planoIdObj == null) {
+                throw new RuntimeException("ID do plano não enviado");
+            }
+
+            Long planoId = Long.valueOf(planoIdObj.toString());
+
+            // 3. Finalizar a matrícula
+            return matriculaService.realizarMatricula(aluno.getId(), planoId);
+        } catch (Exception e) {
+            // Log para você ver o erro real no console do IntelliJ
+            System.out.println("Erro na Matrícula: " + e.getMessage());
+            throw e;
+        }
     }
 
 }

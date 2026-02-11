@@ -30,6 +30,12 @@ public class Aluno {
 
     private LocalDate dataInscricao = LocalDate.now();
 
+    @Column(nullable = false)
+    private String senha;
+
+    // Adiciona este campo se ainda não existir
+    private String role; // Pode ser "ADMIN" ou "USER"
+
     @ManyToOne
     @JoinColumn(name = "plano_id")
     private Plano plano;
