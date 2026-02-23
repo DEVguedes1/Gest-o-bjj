@@ -30,26 +30,27 @@ public class MatriculaController {
 
     @PostMapping
     public ResponseEntity<Matricula> realizarMatricula(@RequestBody MatriculaDTO dto) {
-        // 1. Validação de IDs
-        if (dto.getAlunoId() == null || dto.getPlanoId() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        // 2. Busca o aluno e o plano (Primeira definição de 'aluno')
-        // Se você já buscou aqui, não precisa declarar novamente depois
-        Aluno alunoExistente = alunoRepository.findById(dto.getAlunoId())
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
-
+        // 1. Busca o plano escolhido
         Plano planoSelecionado = planoRepository.findById(dto.getPlanoId())
                 .orElseThrow(() -> new RuntimeException("Plano não encontrado"));
 
-        // 3. Monta o objeto matrícula
+        // 2. Cria o Aluno com os dados do formulário
+        Aluno novoAluno = new Aluno();
+        novoAluno.setNome(dto.getNome());
+        novoAluno.setCpf(dto.getCpf());
+        novoAluno.setEmail(dto.getEmail());
+        novoAluno.setTelefone(dto.getTelefone());
+        novoAluno.setSenha(dto.getSenha()); // Salvando a senha no aluno
+        novoAluno.setFaixa("BRANCA");      // Definindo faixa inicial
+        novoAluno.setRole("USER");         // Cargo no modelo Aluno
+        novoAluno.setPlano(planoSelecionado);
+
+        // 3. Monta a Matrícula
         Matricula matricula = new Matricula();
-        matricula.setAluno(alunoExistente);
+        matricula.setAluno(novoAluno);
         matricula.setPlano(planoSelecionado);
         matricula.setDataMatricula(LocalDate.now());
 
-        // 4. Chama o serviço (que já deve estar corrigido para receber o objeto Matricula)
         return ResponseEntity.ok(matriculaService.realizarMatricula(matricula));
     }
 }

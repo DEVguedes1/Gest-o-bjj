@@ -15,10 +15,6 @@ public class MatriculaDTO {
         return alunoId;
     }
 
-    public void setAlunoId(Long alunoId) {
-        this.alunoId = alunoId;
-    }
-
     public Long getPlanoId() {
         return planoId;
     }

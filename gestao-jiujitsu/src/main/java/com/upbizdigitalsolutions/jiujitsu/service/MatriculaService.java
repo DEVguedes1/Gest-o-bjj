@@ -23,47 +23,41 @@ public class MatriculaService {
     @Autowired
     private MensalidadeRepository mensalidadeRepository;
 
+    @Autowired
+    private AlunoRepository alunoRepository;
+
     @Transactional
     public Matricula realizarMatricula(Matricula matricula) {
-        // 1. Salva a Matrícula e o Aluno vinculado
-        // A matrícula já traz o Plano selecionado do Frontend
-        Matricula novaMatricula = matriculaRepository.save(matricula);
-        Aluno aluno = novaMatricula.getAluno();
+        // 1. Salva o Aluno (isso gera o ID e salva CPF/Senha no banco)
+        Aluno alunoSalvo = alunoRepository.save(matricula.getAluno());
 
-        //outro aluno
-        Aluno alunoMatriculado = novaMatricula.getAluno();
-
-        // 2. CRIAÇÃO DO USUÁRIO (Login)
+        // 2. Cria o Usuário para login no sistema
         Usuario novoUsuario = new Usuario();
-        novoUsuario.setNome(aluno.getNome());
-        novoUsuario.setLogin(aluno.getEmail());
-        novoUsuario.setEmail(aluno.getEmail());
-        novoUsuario.setSenha("123456"); // Senha padrão
+        novoUsuario.setNome(alunoSalvo.getNome());
+        novoUsuario.setLogin(alunoSalvo.getEmail()); // Login será o e-mail
+        novoUsuario.setEmail(alunoSalvo.getEmail());
+        novoUsuario.setSenha(alunoSalvo.getSenha());
+        novoUsuario.setCargo("ALUNO");
         usuarioRepository.save(novoUsuario);
 
-        // 3. GERAÇÃO DA PRIMEIRA MENSALIDADE
-        // Baseado no valor do Plano escolhido na matrícula
-        Mensalidade primeiraMensalidade = new Mensalidade();
-        primeiraMensalidade.setAluno(aluno);
-        primeiraMensalidade.setValor(novaMatricula.getPlano().getPreco());
-        primeiraMensalidade.setDataVencimento(novaMatricula.getDataMatricula().plusMonths(1));
-        primeiraMensalidade.setStatus("PENDENTE");
-        mensalidadeRepository.save(primeiraMensalidade);
+        // 3. Salva a Matrícula vinculada ao aluno salvo
+        matricula.setAluno(alunoSalvo);
+        Matricula novaMatricula = matriculaRepository.save(matricula);
 
-        // 1. Defina o texto da mensagem (A - Formatação)
-        String texto = "Bem-vindo à Bruno Caetano BJJ, *" + aluno.getNome() + "*! 🥋\n\n" +
-                "Sua matrícula foi confirmada com sucesso. Vamos aos treinos!\n\n" +
-                "_Oss!_";
+        // 4. Mensalidade e WhatsApp
+        Mensalidade primeira = new Mensalidade();
+        primeira.setAluno(alunoSalvo);
+        primeira.setValor(novaMatricula.getPlano().getPreco());
+        primeira.setDataVencimento(LocalDate.now().plusMonths(1));
+        primeira.setStatus("PENDENTE");
+        mensalidadeRepository.save(primeira);
 
-        // 2. Chame o método passando os 3 argumentos: Telefone, Nome e o Valor (B - Pix/Cobrança)
-        // Usamos o valor da mensalidade que acabamos de criar
         whatsappService.enviarCobranca(
-                alunoMatriculado.getTelefone(),
-                alunoMatriculado.getNome(),
+                alunoSalvo.getTelefone(),
+                alunoSalvo.getNome(),
                 novaMatricula.getPlano().getPreco()
         );
 
         return novaMatricula;
     }
-
 }
