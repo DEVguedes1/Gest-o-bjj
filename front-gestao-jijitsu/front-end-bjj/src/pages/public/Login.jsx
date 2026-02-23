@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { LogIn, User, Lock, AlertCircle } from 'lucide-react';
+// Adicione o ícone ArrowLeft aqui
+import { LogIn, User, Lock, AlertCircle, ArrowLeft } from 'lucide-react'; 
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
@@ -40,11 +41,21 @@ const Login = () => {
 
   return (
     <div className="login-page">
-      <div className="login-card">
+      <div className="login-container">
+        
+        {/* NOVO: Botão prático para voltar para a página inicial */}
+        <button 
+          onClick={() => navigate('/')} 
+          className="btn-voltar"
+        >
+          <ArrowLeft size={20} />
+          Voltar para Home
+        </button>
+
         <div className="login-header">
-          <div className="logo-placeholder">BC</div>
-          <h1>Acesso Restrito</h1>
-          <p>Gestão de Treinos Bruno Caetano BJJ</p>
+          {/* MUDANÇA: Título mais amigável, sai o "Acesso Restrito" */}
+          <h2>Bem-vindo(a) ao Sistema!</h2>
+          <p>Faça login para acessar sua conta</p>
         </div>
 
         <form onSubmit={handleLogin} className="login-form">

@@ -1,0 +1,103 @@
+.aba-container {
+  background-color: #1e1e1e;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.aba-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.aba-header h2 {
+  font-size: 1.5rem;
+  color: #fff;
+  margin: 0;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: #2a2a2a;
+  padding: 8px 15px;
+  border-radius: 6px;
+  width: 300px;
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  outline: none;
+  margin-left: 10px;
+  width: 100%;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.bjj-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.bjj-table th {
+  background-color: #2a2a2a;
+  color: #a0a0a0;
+  padding: 12px 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  border-bottom: 2px solid #333;
+}
+
+.bjj-table td {
+  padding: 15px;
+  border-bottom: 1px solid #2a2a2a;
+  color: #e0e0e0;
+  vertical-align: middle;
+}
+
+.fw-bold { font-weight: bold; color: #fff !important; }
+
+/* Status Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.badge.ativo { background-color: #1e4620; color: #4ade80; }
+.badge.inativo { background-color: #4a1e1e; color: #ff6b6b; }
+
+/* Botões de Ação */
+.actions-cell {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.btn-icon.edit { color: #4dabf7; }
+.btn-icon.edit:hover { background-color: rgba(77, 171, 247, 0.1); }
+
+.btn-icon.delete { color: #ff6b6b; }
+.btn-icon.delete:hover { background-color: rgba(255, 107, 107, 0.1); }
+
+.empty-message { text-align: center; color: #777; padding: 30px !important; }

@@ -1,126 +1,269 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-/* Container Principal */
-.admin-dashboard {
-  display: flex;
-  min-height: 100vh;
-  background-color: #f4f7f6;
-  font-family: 'Inter', sans-serif;
+/* DashboardAdmin.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+:root {
+  --bg-dark: #121214;
+  --card-bg: #202024;
+  --text-primary: #e1e1e6;
+  --text-secondary: #a8a8b3;
+  --accent-color: #e50914; /* Vermelho Jiu Jitsu */
+  --accent-hover: #b20a12;
+  --success: #04d361;
+  --warning: #fba94c;
 }
 
-/* Sidebar Responsiva */
+.btn-menu-mobile, 
+.btn-fechar-menu, 
+.sidebar-overlay,
+.top-header-mobile {
+  display: none;
+}
+
+.admin-dashboard {
+  display: flex;
+  height: 100vh;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+/* --- SIDEBAR ARREDONDADA --- */
 .sidebar {
   width: 260px;
-  background-color: #1a1a1a;
-  color: white;
-  padding: 20px;
+  background-color: var(--card-bg);
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+  z-index: 10;
+  /* Detalhe: Borda arredondada apenas no canto direito se quiser, 
+     ou mantenha reto para menu lateral full-height */
 }
 
 .sidebar h2 {
-  color: #d4af37;
-  font-size: 1.5rem;
-  margin-bottom: 30px;
+  color: #fff;
   text-align: center;
+  margin-bottom: 40px;
+  font-size: 24px;
+  letter-spacing: 1px;
 }
 
 .sidebar-menu {
-  list-style: none;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 15px;
+  padding: 14px 20px;
+  color: var(--text-secondary);
   cursor: pointer;
-  border-radius: 8px;
-  margin-bottom: 5px;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
+  border-radius: 12px; /* Botões arredondados */
+  font-weight: 500;
+}
+
+.menu-item svg {
+  margin-right: 12px;
 }
 
 .menu-item:hover {
-  background-color: #333;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transform: translateX(5px); /* Pequeno movimento animado */
 }
 
-/* Conteúdo Principal */
+.menu-item.ativo {
+  background: linear-gradient(90deg, var(--accent-color) 0%, rgba(229, 9, 20, 0.6) 100%);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4); /* Sombra colorida */
+}
+
+/* --- ÁREA PRINCIPAL --- */
 .main-content {
   flex: 1;
-  padding: 30px;
+  padding: 40px;
   overflow-y: auto;
+  background-image: radial-gradient(circle at top right, #2a2a2a 0%, #121214 40%);
 }
 
+/* --- CARDS E ESTATÍSTICAS (O principal "menos quadrado") --- */
 .header-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 25px;
+  margin-bottom: 40px;
 }
 
-/* Cards de Métricas */
 .stat-card {
-  background: white;
+  background-color: var(--card-bg);
+  border-radius: 24px; /* Bem arredondado */
   padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   display: flex;
   align-items: center;
   gap: 20px;
-  border-bottom: 4px solid #d4af37;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
 }
 
 .icon-box {
-  background: #fff9e6;
-  padding: 15px;
-  border-radius: 12px;
-  color: #d4af37;
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 60px;
+  height: 60px;
+  border-radius: 18px; /* Ícone quadrado-arredondado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
 }
 
 .stat-info h3 {
-  font-size: 0.9rem;
-  color: #888;
-  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
 }
 
 .stat-info p {
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin: 5px 0 0;
-  color: #1a1a1a;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
 }
 
-/* Tabela de Atividades Recentes */
-.recent-activity {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+/* --- ESTILOS GERAIS PARA AS NOVAS ABAS --- */
+.aba-container {
+  background-color: var(--card-bg);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* --- RESPONSIVIDADE (Celular) --- */
+h2 {
+  font-size: 28px;
+  margin-bottom: 25px;
+}
+
+/* Inputs e Forms mais bonitos */
+input, select {
+  background-color: #121214;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 12px 15px;
+  border-radius: 12px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: var(--accent-color);
+}
+
+button.btn-primary {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px; /* Botão pílula */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button.btn-primary:hover {
+  background-color: var(--accent-hover);
+  box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+}
+
+/* Quando a tela for menor que 768px (Celulares e Tablets) */
 @media (max-width: 768px) {
-  .admin-dashboard {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    padding: 10px;
-  }
-
-  .sidebar h2 { margin-bottom: 10px; }
-
-  .sidebar-menu {
+  
+  /* Botão Menu Hambúrguer no topo */
+  .top-header-mobile {
     display: flex;
-    overflow-x: auto;
-    gap: 10px;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
   }
 
-  .menu-item span { display: none; } /* Esconde texto no mobile, deixa só ícone */
+  .btn-menu-mobile {
+    display: block;
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px;
+  }
 
+  /* A Sidebar fica flutuando fora da tela (left: -300px) */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    height: 100vh;
+    z-index: 1000; /* Fica acima de tudo */
+    transition: left 0.3s ease-in-out;
+    border-radius: 0 20px 20px 0; /* Arredonda só o lado direito */
+  }
+
+  /* Quando o estado sidebarAberta for true, ela desliza para a tela */
+  .sidebar.aberta {
+    left: 0;
+  }
+
+  /* Organiza o título e o X lado a lado */
+  .sidebar-header {
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+
+  .sidebar-header h2 {
+    margin-bottom: 0;
+  }
+
+  .btn-fechar-menu {
+    display: block;
+    background: transparent;
+    border: none;
+    color: #a8a8b3;
+    cursor: pointer;
+  }
+
+  /* Fundo escuro atrás do menu (impede de clicar no fundo) */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px); /* Deixa o fundo embaçado (bonito) */
+    z-index: 999; /* Fica abaixo da sidebar, mas acima do resto */
+  }
+
+  /* Ajustes extras para o mobile ficar bonito */
   .main-content {
-    padding: 15px;
+    padding: 20px; /* Reduz o padding no celular */
+  }
+
+  /* Se a tela do dashboard (cards) ficar apertada no celular */
+  .header-stats {
+    grid-template-columns: 1fr; /* 1 card por linha no celular */
   }
 }
