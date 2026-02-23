@@ -14,20 +14,20 @@ Sistema Full Stack para gerenciamento de academias de Jiu-Jitsu, com foco em mat
 
 ### 1. Back-end
 Configure o banco em `application.properties` e execute:
-```bash
+***bash
 cd gestao-jiujitsu
-./mvnw spring-boot:run```
+./mvnw spring-boot:run***
 
 ### 2. Front-end
-```bash
+***bash
 cd front-gestao-jijitsu/front-end-bjj
-npm install && npm run dev
-´´´
+npm install && npm run dev***
+
 ### 3. Bot WhatsApp
-```bash
+***bash
 cd bot
 npm install && node root.js
-´´´
+***
 
 🔒 Licença
 Direitos reservados à Digital Solutions.
