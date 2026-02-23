@@ -50,6 +50,12 @@ public class MatriculaService {
         primeira.setValor(novaMatricula.getPlano().getPreco());
         primeira.setDataVencimento(LocalDate.now().plusMonths(1));
         primeira.setStatus("PENDENTE");
+
+        LocalDate dataVencimento = LocalDate.now()
+                .withDayOfMonth(alunoSalvo.getDiaVencimento())
+                .plusMonths(1);
+        primeira.setDataVencimento(dataVencimento);
+
         mensalidadeRepository.save(primeira);
 
         whatsappService.enviarCobranca(
@@ -60,4 +66,5 @@ public class MatriculaService {
 
         return novaMatricula;
     }
+
 }

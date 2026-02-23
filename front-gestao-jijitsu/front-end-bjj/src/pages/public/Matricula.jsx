@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-// ADICIONADO 'Link' na importação abaixo
 import { Link } from 'react-router-dom'; 
-import { User, Mail, Phone, Award, CheckCircle2, Lock } from 'lucide-react'; 
+import { User, Mail, Phone, Award, CheckCircle2, Lock, CalendarDays } from 'lucide-react'; 
 import './Matricula.css';
 
 const Matricula = () => {
@@ -14,6 +13,7 @@ const Matricula = () => {
     cpf: '',
     dataNascimento: '',
     senha: '', 
+    diaVencimento: 5, // Valor padrão definido aqui
     planoId: ''
   });
   const [status, setStatus] = useState({ type: '', message: '' });
@@ -27,7 +27,6 @@ const Matricula = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // O payload deve ter os mesmos nomes de campos do seu MatriculaDTO no Java
     const payload = {
       nome: formData.nome,
       email: formData.email,
@@ -35,14 +34,15 @@ const Matricula = () => {
       cpf: formData.cpf,
       dataNascimento: formData.dataNascimento,
       senha: formData.senha,
-      planoId: Number(formData.planoId) // Certifique-se de enviar como número
+      planoId: Number(formData.planoId),
+      // GARANTA QUE ESTA LINHA ESTEJA ASSIM:
+      diaVencimento: Number(formData.diaVencimento) 
     };
 
     try {
       await axios.post('http://localhost:8080/api/matriculas', payload);
       setStatus({ type: 'success', message: 'Inscrição realizada!' });
     } catch (err) {
-      // Verifique o que o Spring retornou especificamente no erro 400
       console.error("Erro do Backend:", err.response?.data);
     }
   };
@@ -135,6 +135,22 @@ const Matricula = () => {
                 required 
                 onChange={(e) => setFormData({...formData, senha: e.target.value})}
               />
+            </div>
+
+            {/* CORREÇÃO VISUAL: Seletor de dia de vencimento integrado ao formData */}
+            <div className="input-group">
+              <label><CalendarDays size={18} /> Melhor dia para vencimento</label>
+              <select 
+                className="select-vencimento"
+                value={formData.diaVencimento} 
+                onChange={(e) => setFormData({...formData, diaVencimento: e.target.value})}
+              >
+                <option value="5">Dia 05</option>
+                <option value="10">Dia 10</option>
+                <option value="15">Dia 15</option>
+                <option value="20">Dia 20</option>
+                <option value="25">Dia 25</option>
+              </select>
             </div>
 
             <div className="input-group">

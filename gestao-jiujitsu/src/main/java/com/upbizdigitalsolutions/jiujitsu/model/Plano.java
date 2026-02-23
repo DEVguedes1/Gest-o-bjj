@@ -26,7 +26,7 @@ public class Plano {
 
     private String status;
 
-    @OneToMany(mappedBy = "plano")
+    @OneToMany(mappedBy = "plano", cascade = CascadeType.ALL, orphanRemoval = true)
     @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Aluno> alunos;
 }

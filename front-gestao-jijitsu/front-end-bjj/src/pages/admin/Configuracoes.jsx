@@ -1,111 +1,115 @@
-import React, { useState } from 'react';
-import { Save, Plus, Trash, Edit3 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Plus, Trash } from 'lucide-react';
 import './DashboardAdmin.css';
 
 const Configuracoes = () => {
-  // Estado para Dados da Academia
-  const [academia, setAcademia] = useState({
-    nome: 'Academia Gracie Barra',
-    endereco: 'Rua Principal, 123 - Centro',
-    telefone: '(81) 99999-8888'
-  });
+  const [planos, setPlanos] = useState([]);
+  const [novoPlano, setNovoPlano] = useState({ nome: '', preco: '', treinosSemana: '' });
 
-  // Estado para Planos
-  const [planos, setPlanos] = useState([
-    { id: 1, nome: 'Mensal Jiu-Jitsu', valor: 150.00 },
-    { id: 2, nome: 'Trimestral', valor: 400.00 },
-    { id: 3, nome: 'Anual (Promocional)', valor: 1200.00 }
-  ]);
+  useEffect(() => { carregarPlanos(); }, []);
 
-  const handleSaveAcademia = (e) => {
-    e.preventDefault();
-    alert('Dados da academia salvos com sucesso!');
-    // axios.put('/api/config/academia', academia)
+  const carregarPlanos = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/planos');
+      setPlanos(Array.isArray(response.data) ? response.data : []);
+    } catch (error) { 
+      console.error("Erro ao carregar planos:", error);
+      setPlanos([]); 
+    }
   };
 
-  const removerPlano = (id) => {
-    if(window.confirm('Tem certeza que deseja excluir este plano?')) {
-      setPlanos(planos.filter(p => p.id !== id));
+  const handleAdicionarPlano = async (e) => {
+    e.preventDefault();
+    if (!novoPlano.nome || !novoPlano.preco || !novoPlano.treinosSemana) {
+      return alert("Preencha todos os campos!");
+    }
+
+    try {
+      // Ajustado para os nomes do seu Plano.java: preco e treinosSemana
+      await axios.post('http://localhost:8080/api/planos', {
+        nome: novoPlano.nome,
+        preco: parseFloat(novoPlano.preco),
+        treinosSemana: parseInt(novoPlano.treinosSemana),
+        status: "ATIVO", // Adicionado para garantir que o plano nasça ativo
+        duracaoMeses: 1   // Valor padrão
+      });
+      
+      alert('Plano adicionado com sucesso!');
+      setNovoPlano({ nome: '', preco: '', treinosSemana: '' });
+      carregarPlanos();
+    } catch (error) {
+      alert('Erro ao salvar no banco de dados.');
+    }
+  };
+
+  const removerPlano = async (id) => {
+    if (!window.confirm('Deseja realmente excluir este plano?')) return;
+    
+    try {
+      await axios.delete(`http://localhost:8080/api/planos/${id}`);
+      alert('Plano excluído!');
+      carregarPlanos();
+    } catch (error) {
+      alert('Não foi possível excluir. Talvez existam alunos vinculados a este plano.');
     }
   };
 
   return (
-    <div className="config-wrapper" style={{display: 'flex', flexDirection: 'column', gap: '30px'}}>
+    <div className="aba-container">
+      <h2>Configurações de Planos</h2>
       
-      {/* CARD 1: DADOS DA ACADEMIA */}
-      <div className="aba-container">
-        <h2>Dados da Academia</h2>
-        <form onSubmit={handleSaveAcademia} style={{display: 'grid', gap: '20px'}}>
-          <div>
-            <label style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Nome do Estabelecimento</label>
-            <input 
-              type="text" 
-              value={academia.nome} 
-              onChange={e => setAcademia({...academia, nome: e.target.value})}
-            />
-          </div>
-          <div style={{display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px'}}>
-            <div>
-              <label style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Endereço</label>
-              <input 
-                type="text" 
-                value={academia.endereco} 
-                onChange={e => setAcademia({...academia, endereco: e.target.value})}
-              />
-            </div>
-            <div>
-              <label style={{display: 'block', marginBottom: '8px', color: '#ccc'}}>Telefone/WhatsApp</label>
-              <input 
-                type="text" 
-                value={academia.telefone} 
-                onChange={e => setAcademia({...academia, telefone: e.target.value})}
-              />
-            </div>
-          </div>
-          <button type="submit" className="btn-primary" style={{width: 'fit-content', display: 'flex', gap: '10px'}}>
-            <Save size={18} /> Salvar Alterações
-          </button>
-        </form>
-      </div>
+      <form onSubmit={handleAdicionarPlano} style={{display: 'flex', gap: '10px', marginBottom: '30px', flexWrap: 'wrap'}}>
+        <input 
+          placeholder="Nome do Plano" 
+          value={novoPlano.nome} 
+          onChange={e => setNovoPlano({...novoPlano, nome: e.target.value})} 
+          style={{flex: 2}}
+        />
+        <input 
+          type="number" 
+          placeholder="Preço R$" 
+          value={novoPlano.preco} 
+          onChange={e => setNovoPlano({...novoPlano, preco: e.target.value})} 
+          style={{flex: 1}}
+        />
+        <input 
+          type="number" 
+          placeholder="Treinos/Semana" 
+          value={novoPlano.treinosSemana} 
+          onChange={e => setNovoPlano({...novoPlano, treinosSemana: e.target.value})} 
+          style={{flex: 1}}
+        />
+        <button type="submit" className="btn-primary" title="Adicionar ao Banco"><Plus size={18} /></button>
+      </form>
 
-      {/* CARD 2: GERENCIAR PLANOS */}
-      <div className="aba-container">
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
-          <h2>Planos e Valores</h2>
-          <button className="btn-primary" style={{padding: '8px 16px', fontSize: '14px'}}>
-            <Plus size={16} /> Novo Plano
-          </button>
-        </div>
-
-        <div className="table-container">
-          <table className="bjj-table">
-            <thead>
-              <tr>
-                <th>Nome do Plano</th>
-                <th>Valor (R$)</th>
-                <th style={{textAlign: 'right'}}>Ações</th>
+      <div className="table-container">
+        <table className="bjj-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Preço</th>
+              <th>Frequência</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {planos.map(p => (
+              <tr key={p.id}>
+                <td className="fw-bold">{p.nome}</td>
+                {/* Usamos p.preco aqui para bater com o Java */}
+                <td>R$ {Number(p.preco || 0).toFixed(2)}</td>
+                <td>{p.treinosSemana}x na semana</td>
+                <td>
+                  <button onClick={() => removerPlano(p.id)} className="btn-icon delete">
+                    <Trash size={18} />
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {planos.map(plano => (
-                <tr key={plano.id}>
-                  <td className="fw-bold">{plano.nome}</td>
-                  <td>R$ {plano.valor.toFixed(2)}</td>
-                  <td style={{textAlign: 'right'}}>
-                    <button className="btn-icon edit" style={{color: '#4dabf7', marginRight: '10px'}}>
-                      <Edit3 size={18} />
-                    </button>
-                    <button className="btn-icon delete" style={{color: '#ff6b6b'}} onClick={() => removerPlano(plano.id)}>
-                      <Trash size={18} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
-
     </div>
   );
 };

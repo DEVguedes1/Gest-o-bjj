@@ -41,6 +41,7 @@ public class MatriculaController {
         novoAluno.setEmail(dto.getEmail());
         novoAluno.setTelefone(dto.getTelefone());
         novoAluno.setSenha(dto.getSenha()); // Salvando a senha no aluno
+        novoAluno.setDiaVencimento(dto.getDiaVencimento());
         novoAluno.setFaixa("BRANCA");      // Definindo faixa inicial
         novoAluno.setRole("USER");         // Cargo no modelo Aluno
         novoAluno.setPlano(planoSelecionado);

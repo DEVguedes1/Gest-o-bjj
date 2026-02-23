@@ -24,6 +24,7 @@ public class Aluno {
 
     private String telefone;
 
+    @Column(name = "dia_vencimento")
     private Integer diaVencimento;
 
     private String faixa;
@@ -39,5 +40,4 @@ public class Aluno {
     @ManyToOne
     @JoinColumn(name = "plano_id")
     private Plano plano;
-
 }

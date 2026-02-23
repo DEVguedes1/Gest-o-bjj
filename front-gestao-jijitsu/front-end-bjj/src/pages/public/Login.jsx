@@ -26,8 +26,8 @@ const Login = () => {
     localStorage.setItem('is_auth', 'true'); // Flag extra para segurança
 
     // Redirecionamento imediato após salvar
-    if (user.role === 'ADMIN') {
-      navigate('/admin/dashboard');
+    if (user.role === 'MESTRE' || user.role === 'ADMIN') {
+    navigate('/admin/dashboard');
     } else {
       navigate('/aluno/perfil');
     }

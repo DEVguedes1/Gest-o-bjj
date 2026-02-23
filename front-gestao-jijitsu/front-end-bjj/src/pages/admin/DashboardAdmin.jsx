@@ -105,9 +105,6 @@ const DashboardAdmin = () => {
       case 'financeiro':
         // Usa o arquivo Financeiro.jsx que você já criou
         return <Financeiro />; 
-
-      case 'novas-matriculas':
-        return <div><h2>Formulário de Matrícula (Em breve)</h2></div>;
       case 'configuracoes':
         return <Configuracoes />;
       default:

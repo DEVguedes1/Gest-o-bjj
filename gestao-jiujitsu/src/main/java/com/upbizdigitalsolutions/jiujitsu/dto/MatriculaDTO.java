@@ -9,6 +9,7 @@ public class MatriculaDTO {
     private String cpf;
     private String dataNascimento;
     private String senha;
+    private Integer diaVencimento;
 
     // Getters e Setters
     public Long getAlunoId() {
@@ -70,4 +71,10 @@ public class MatriculaDTO {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+
+    public Integer getDiaVencimento() { return diaVencimento;}
+
+    public void setDiaVencimento(Integer diaVencimento) { this.diaVencimento = diaVencimento;}
+
 }
