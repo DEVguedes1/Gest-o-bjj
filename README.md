@@ -26,8 +26,7 @@ npm install && npm run dev***
 ### 3. Bot WhatsApp
 ***bash
 cd bot
-npm install && node root.js
-***
+npm install && node root.js***
 
 🔒 Licença
 Direitos reservados à Digital Solutions.
