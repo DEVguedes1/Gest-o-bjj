@@ -15,10 +15,8 @@ public class MatriculaService {
     private MatriculaRepository matriculaRepository;
 
     @Autowired
-    private AlunoRepository alunoRepository;
+    private WhatsappService whatsappService;
 
-    @Autowired
-    private PlanoRepository planoRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
 
@@ -31,6 +29,9 @@ public class MatriculaService {
         // A matrícula já traz o Plano selecionado do Frontend
         Matricula novaMatricula = matriculaRepository.save(matricula);
         Aluno aluno = novaMatricula.getAluno();
+
+        //outro aluno
+        Aluno alunoMatriculado = novaMatricula.getAluno();
 
         // 2. CRIAÇÃO DO USUÁRIO (Login)
         Usuario novoUsuario = new Usuario();
@@ -49,6 +50,20 @@ public class MatriculaService {
         primeiraMensalidade.setStatus("PENDENTE");
         mensalidadeRepository.save(primeiraMensalidade);
 
+        // 1. Defina o texto da mensagem (A - Formatação)
+        String texto = "Bem-vindo à Bruno Caetano BJJ, *" + aluno.getNome() + "*! 🥋\n\n" +
+                "Sua matrícula foi confirmada com sucesso. Vamos aos treinos!\n\n" +
+                "_Oss!_";
+
+        // 2. Chame o método passando os 3 argumentos: Telefone, Nome e o Valor (B - Pix/Cobrança)
+        // Usamos o valor da mensalidade que acabamos de criar
+        whatsappService.enviarCobranca(
+                alunoMatriculado.getTelefone(),
+                alunoMatriculado.getNome(),
+                novaMatricula.getPlano().getPreco()
+        );
+
         return novaMatricula;
     }
+
 }

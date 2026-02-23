@@ -1,37 +1,23 @@
 package com.upbizdigitalsolutions.jiujitsu.controller;
 
-import com.upbizdigitalsolutions.jiujitsu.service.MensalidadeService;
-import com.upbizdigitalsolutions.jiujitsu.service.NotificacaoService;
+import com.upbizdigitalsolutions.jiujitsu.service.WhatsappService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 @RestController
-@RequestMapping("/api/teste")
 public class TestController {
 
     @Autowired
-    private NotificacaoService notificacaoService;
+    private WhatsappService whatsappService;
 
-    @Autowired
-    private MensalidadeService mensalidadeService;
-
-    // Testa o envio do WhatsApp (o que já validamos com Twilio)
-    @GetMapping("/whatsapp")
-    public String testarEnvio() {
-        notificacaoService.verificarCobrancasManual();
-        return "Processo de envio iniciado! Verifique o console e seu WhatsApp.";
-    }
-
-    // Testa a geração de mensalidades no MySQL (o que estamos automatizando agora)
-    @GetMapping("/gerar-mensalidades")
-    public String dispararGeracao() {
-        try {
-            mensalidadeService.testarGeracaoAgora();
-            return "Geração de mensalidades concluída! Verifique a tabela no MySQL.";
-        } catch (Exception e) {
-            return "Erro ao gerar mensalidades: " + e.getMessage();
-        }
+    // No arquivo TestController.java
+    @GetMapping("/testar-bot")
+    public String testarBot(@RequestParam String numero) {
+        whatsappService.enviarCobranca(numero, "Aluno Teste", java.math.BigDecimal.valueOf(80.00));
+        return "Pedido de envio feito!";
     }
 }

@@ -26,14 +26,27 @@ const Matricula = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // O payload deve ter os mesmos nomes de campos do seu MatriculaDTO no Java
+    const payload = {
+      nome: formData.nome,
+      email: formData.email,
+      telefone: formData.telefone,
+      cpf: formData.cpf,
+      dataNascimento: formData.dataNascimento,
+      senha: formData.senha,
+      planoId: Number(formData.planoId) // Certifique-se de enviar como número
+    };
+
     try {
-      await axios.post('http://localhost:8080/api/matriculas', formData);
-      setStatus({ type: 'success', message: 'Inscrição realizada com sucesso! Bem-vindo à equipa.' });
+      await axios.post('http://localhost:8080/api/matriculas', payload);
+      setStatus({ type: 'success', message: 'Inscrição realizada!' });
     } catch (err) {
-      setStatus({ type: 'error', message: 'Erro ao processar matrícula. Tente novamente.' });
+      // Verifique o que o Spring retornou especificamente no erro 400
+      console.error("Erro do Backend:", err.response?.data);
     }
   };
-
+  
   return (
     <div className="matricula-page">
       <div className="container grid-matricula">

@@ -28,4 +28,8 @@ public class Matricula {
     public LocalDate getDataMatricula() {
         return dataInicio;
     }
+
+    public void setDataMatricula(LocalDate now) {
+        this.dataInicio = now;
+    }
 }

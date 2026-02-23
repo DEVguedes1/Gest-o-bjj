@@ -1,12 +1,17 @@
 package com.upbizdigitalsolutions.jiujitsu.controller;
 
+import com.upbizdigitalsolutions.jiujitsu.dto.MatriculaDTO;
 import com.upbizdigitalsolutions.jiujitsu.model.Aluno;
 import com.upbizdigitalsolutions.jiujitsu.model.Matricula;
+import com.upbizdigitalsolutions.jiujitsu.model.Plano;
 import com.upbizdigitalsolutions.jiujitsu.repository.AlunoRepository;
+import com.upbizdigitalsolutions.jiujitsu.repository.PlanoRepository;
 import com.upbizdigitalsolutions.jiujitsu.service.MatriculaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -20,40 +25,31 @@ public class MatriculaController {
     @Autowired
     private AlunoRepository alunoRepository;
 
+    @Autowired
+    private PlanoRepository planoRepository;
+
     @PostMapping
-    public Matricula criar(@RequestBody Map<String, Object> payload) {
-        try {
-            // 1. Criar o Aluno com validação de tipos
-            Aluno aluno = new Aluno();
-            aluno.setNome((String) payload.get("nome"));
-            aluno.setEmail((String) payload.get("email"));
-            aluno.setTelefone((String) payload.get("telefone"));
-            aluno.setCpf((String) payload.get("cpf"));
-            aluno.setSenha((String) payload.get("senha")); // Captura a senha do payload
-            aluno.setFaixa("Branca");
-
-            // Garante que o CPF não é nulo antes de salvar
-            if (aluno.getCpf() == null || aluno.getCpf().isEmpty()) {
-                throw new RuntimeException("CPF é obrigatório");
-            }
-
-            alunoRepository.save(aluno);
-
-            // 2. Conversão segura do planoId
-            Object planoIdObj = payload.get("planoId");
-            if (planoIdObj == null) {
-                throw new RuntimeException("ID do plano não enviado");
-            }
-
-            Long planoId = Long.valueOf(planoIdObj.toString());
-
-            // 3. Finalizar a matrícula
-            return matriculaService.realizarMatricula(aluno.getId(), planoId);
-        } catch (Exception e) {
-            // Log para você ver o erro real no console do IntelliJ
-            System.out.println("Erro na Matrícula: " + e.getMessage());
-            throw e;
+    public ResponseEntity<Matricula> realizarMatricula(@RequestBody MatriculaDTO dto) {
+        // 1. Validação de IDs
+        if (dto.getAlunoId() == null || dto.getPlanoId() == null) {
+            return ResponseEntity.badRequest().build();
         }
-    }
 
+        // 2. Busca o aluno e o plano (Primeira definição de 'aluno')
+        // Se você já buscou aqui, não precisa declarar novamente depois
+        Aluno alunoExistente = alunoRepository.findById(dto.getAlunoId())
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+
+        Plano planoSelecionado = planoRepository.findById(dto.getPlanoId())
+                .orElseThrow(() -> new RuntimeException("Plano não encontrado"));
+
+        // 3. Monta o objeto matrícula
+        Matricula matricula = new Matricula();
+        matricula.setAluno(alunoExistente);
+        matricula.setPlano(planoSelecionado);
+        matricula.setDataMatricula(LocalDate.now());
+
+        // 4. Chama o serviço (que já deve estar corrigido para receber o objeto Matricula)
+        return ResponseEntity.ok(matriculaService.realizarMatricula(matricula));
+    }
 }

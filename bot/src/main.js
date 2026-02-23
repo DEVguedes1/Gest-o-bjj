@@ -17,6 +17,9 @@ const eventsConfig = require("./events");
 const { NodeCache } = require("@cacheable/node-cache");
 const msgRetryCounterCache = new NodeCache();
 
+//server
+const setupServer = require("./server");
+
 async function startSock() {
   const { state, saveCreds } = await getAuthState();
   const { version, isLatest } = await fetchLatestBaileysVersion();
@@ -36,7 +39,24 @@ async function startSock() {
     generateHighQualityLinkPreview: true,
     logger: P({ level: "silent" }),
   });
+  setupServer(sock);
   eventsConfig(sock, saveCreds);
+
+  sock.ev.on('connection.update', (update) => {
+      const { connection, lastDisconnect } = update;
+      
+      if (connection === 'close') {
+          const shouldReconnect = lastDisconnect.error?.output?.statusCode !== 401;
+          console.log('🔄 Conexão fechada devido a:', lastDisconnect.error, '. Reconectando:', shouldReconnect);
+          
+          // Reconecta se não for erro de logoff (401)
+          if (shouldReconnect) {
+              startSock();
+          }
+      } else if (connection === 'open') {
+          console.log('✅ Bot conectado com sucesso!');
+      }
+  });
 }
 
 module.exports = startSock; // necessário reiniciar caso a conexão caia (não apagar)

@@ -42,12 +42,21 @@ function eventsConfig(sock, saveCreds) {
         if (processedMessages.has(idMensagem)) continue;
         processedMessages.add(idMensagem);
 
-        // verifica se a mensagem é de um grupo
+        
+        // Verifica a origem do número de forma segura
         let number;
-        if (msg.key.participant) {
-          number = msg.key.participantAlt.split("@")[0];
-        } else if (msg.key.remoteJid && msg.key.remoteJid.includes("@")) {
-          number = msg.key.remoteJid.split("@")[0];
+        const remoteJid = msg.key.remoteJid;
+        const participant = msg.key.participant;
+
+        if (remoteJid && remoteJid.includes("@s.whatsapp.net")) {
+          // Conversa privada
+          number = remoteJid.split("@")[0];
+        } else if (participant && participant.includes("@s.whatsapp.net")) {
+          // Mensagem dentro de um grupo
+          number = participant.split("@")[0];
+        } else {
+          // Fallback caso as opções acima falhem
+          number = remoteJid ? remoteJid.split("@")[0] : "desconhecido";
         }
 
         // verifica se o texto da mensagem é válido
@@ -75,8 +84,7 @@ function eventsConfig(sock, saveCreds) {
             break;
 
           case "documento":
-            const caminhoPDF = console.log(caminhoPDF);
-            const mimeType =
+              const caminhoPDF = path.join(raiz, "media", "tony.pdf"); // Ou o nome correto do seu arquivo            const mimeType =
               mime.lookup(caminhoPDF) || "application/octet-stream";
             await sock.sendMessage(from, {
               document: fs.readFileSync(caminhoPDF),

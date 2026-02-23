@@ -21,14 +21,15 @@ public class MensalidadeService {
     @Autowired
     private MensalidadeRepository mensalidadeRepository;
 
-    // Roda no dia 1 de cada mês às 01:00 da manhã
+    @Autowired
+    private WhatsappService whatsappService;
+
     @Scheduled(cron = "0 0 1 1 * *")
     public void gerarMensalidadesAutomaticas() {
         List<Aluno> alunosAtivos = alunoRepository.findAll();
         LocalDate hoje = LocalDate.now();
 
         for (Aluno aluno : alunosAtivos) {
-            // Regra de Ouro: Só cria se não existir mensalidade para este aluno no mês/ano atual
             if (!mensalidadeRepository.existsByAlunoAndMesReferencia(
                     aluno, hoje.getMonthValue(), hoje.getYear())) {
 
@@ -36,19 +37,38 @@ public class MensalidadeService {
                 nova.setAluno(aluno);
                 nova.setStatus("PENDENTE");
 
-                // Busca o preço do plano. Se o aluno não tiver plano, define um valor padrão
                 BigDecimal valor = (aluno.getPlano() != null)
                         ? aluno.getPlano().getPreco()
                         : BigDecimal.valueOf(80.00);
                 nova.setValor(valor);
 
-                // Define o vencimento com base no dia escolhido no cadastro do aluno
                 nova.setDataVencimento(LocalDate.of(hoje.getYear(), hoje.getMonth(), aluno.getDiaVencimento()));
 
                 mensalidadeRepository.save(nova);
+
+                if (aluno.getTelefone() != null && !aluno.getTelefone().isEmpty()) {
+                    whatsappService.enviarCobranca(aluno.getTelefone(), aluno.getNome(), nova.getValor());
+                }
             }
         }
-        System.out.println("Cron executado: Mensalidades de " + hoje.getMonth() + " geradas!");
+        System.out.println("Mensalidades geradas!");
+    }
+
+    @Scheduled(cron = "0 0 9 * * *")
+    public void notificarVencimentosHoje() {
+        LocalDate hoje = LocalDate.now();
+        // Busca as mensalidades que vencem hoje
+        List<Mensalidade> pendentes = mensalidadeRepository.findByDataVencimentoAndStatus(hoje, "PENDENTE");
+
+        for (Mensalidade m : pendentes) {
+            // CORREÇÃO: Usar o objeto 'm' do loop para pegar o aluno e o valor
+            BigDecimal valor = m.getValor();
+            Aluno aluno = m.getAluno();
+
+            if (aluno.getTelefone() != null) {
+                whatsappService.enviarCobranca(aluno.getTelefone(), aluno.getNome(), valor);
+            }
+        }
     }
 
     public void testarGeracaoAgora() {
